@@ -1,26 +1,53 @@
-**An Free Open Source BO2 PS4 GSC with account recovery options**
+# UnlockMenuV3 – Free Open Source BO2 PS4 GSC Menu
 
+**A free and open-source GSC menu for Call of Duty: Black Ops 2 on PlayStation 4**, focused on account recovery, stat editing, and full unlocks.
 
-This version are actually the v3 of UnlockMenuV3
+This is **version 3** of UnlockMenu.
 
-if you use DeadOps injector download DeadOps file
-if you use debug tools download compiled file
+---
 
-**This menu have :**
-**Rank Up options**
-**Account Stats**
-  - Modify Account Stats
-  - Modify Medals Stats
-  - Modify Weapons Stats
-  - Modify Equipments Stats
-  - Modify Scorestreaks Stats
-  - Modify Game Modes Stats
-**Account Unlocks**
-  - Unlock Camos
-  - Unlock all works perfectly on fresh acc and or fresh start your account
-  - UNLOCK 100% PSN TROPHY
-**Save / Profiles**
-  - Save Account Stats
+## Download Instructions
 
-    
-special thanks to @medo for the menu base
+| Injector / Tool          | File to Download      |
+|--------------------------|-----------------------|
+| **DeadOps Injector**     | DeadOps file          |
+| **Debug Tools**          | Compiled file         |
+
+Choose the correct file according to the tool you are using.
+
+---
+
+## Features
+
+### Rank Up
+- Rank up options
+
+### Account Stats
+- Modify Account Stats  
+- Modify Medals Stats  
+- Modify Weapons Stats  
+- Modify Equipments Stats  
+- Modify Scorestreaks Stats  
+- Modify Game Modes Stats  
+
+### Account Unlocks
+- Unlock Camos  
+- Unlock All (works perfectly on fresh accounts or after a fresh start)  
+- Unlock **100% PSN Trophies**
+
+### Save / Profiles
+- Save Account Stats
+
+---
+
+## Credits
+
+Special thanks to **@medo** for the menu base.
+
+---
+
+## Disclaimer
+
+This project is provided for educational and recovery purposes only.  
+Use at your own risk. The authors are not responsible for any bans, account issues, or other consequences.
+```​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
