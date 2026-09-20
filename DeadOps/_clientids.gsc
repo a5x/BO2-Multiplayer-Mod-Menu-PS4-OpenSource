@@ -160,7 +160,7 @@ um_back(a, b)
 // ================================================================= menu layout
 um_buildmenus()
 {
-    self um_addmenu("main", undefined, "Unlock Menu V3");
+    self um_addmenu("main", undefined, "Unlock Menu V3.1");
     self um_addmenu("rank", "main", "^5Rank & Prestige");
     self um_addmenu("lvl", "rank", "^5Choose Level");
     self um_addmenu("accountstats", "main", "^5Account Stats");
@@ -210,6 +210,7 @@ um_buildmenus()
     self um_add("credits", "Game Modes stats by @jlzerty", ::um_creditnoop, undefined, undefined);
     self um_add("credits", "PSN Trophies code by jiggymenu, whiteshadow bo3 plat unlock code", ::um_creditnoop, undefined, undefined);
     self um_add("credits", "UNLOCK ALL code from Abyss Project", ::um_creditnoop, undefined, undefined);
+    self um_add("credits", "UNLOCK ALL FIX for old acc @jlzerty", ::um_creditnoop, undefined, undefined);
     self um_add("credits", "^1Back", ::um_back, undefined, undefined);
 
     // ---- rank
@@ -440,16 +441,16 @@ um_controls_hud()
     self.um_controls_text = [];
 
     self.um_controls_text[0] = self um_newtext(318, 1.05);
-    self.um_controls_text[0] settext("L2 [{+speed_throw}] + R3 [{+melee}]");
+    self.um_controls_text[0] settext("[{+speed_throw}] + [{+melee}] Open Menu");
 
     self.um_controls_text[1] = self um_newtext(337, 1.05);
     self.um_controls_text[1] settext("UP [{+actionslot 1}] / DOWN [{+actionslot 2}]");
 
     self.um_controls_text[2] = self um_newtext(356, 1.05);
-    self.um_controls_text[2] settext("SQUARE [{+usereload}]  SELECT");
+    self.um_controls_text[2] settext(" [{+usereload}]  SELECT");
 
     self.um_controls_text[3] = self um_newtext(375, 1.05);
-    self.um_controls_text[3] settext("R3 [{+melee}]  BACK");
+    self.um_controls_text[3] settext("[{+melee}]  BACK");
 
     for (i = 0; i < self.um_controls_text.size; i++)
     {
@@ -889,17 +890,17 @@ um_medaltable(a, b)
     {
         case 1:
             start = 0;
-            end = 230;
+            end = 256;
             break;
 
         case 2:
             start = 256;
-            end = 510;
+            end = 512;
             break;
 
         case 3:
             start = 512;
-            end = 705;
+            end = 768;
             break;
 
         default:
@@ -968,7 +969,7 @@ um_gamemodemedals(a, b)
         b = 997;
 
     start = 768;
-    end = 954;
+    end = 1024;
 
     tableName = tableLookupFindCoreAsset("mp/statsmilestones" + a + ".csv");
     medalCount = 0;
@@ -1297,22 +1298,22 @@ um_unlockall(a, b)
         if (file == 1)
         {
             start = 0;
-            end = 230;
+            end = 256;
         }
         else if (file == 2)
         {
             start = 256;
-            end = 510;
+            end = 512;
         }
         else if (file == 3)
         {
             start = 512;
-            end = 705;
+            end = 768;
         }
         else if (file == 4)
         {
             start = 768;
-            end = 954;
+            end = 1024;
         }
 
         for (value = start; value < end; value++)
@@ -1333,8 +1334,9 @@ um_unlockall(a, b)
                 else if (stat_name == "lifetime_career_score_MULTITEAM")
                     stat_name = "career_score_multiteam";
 
-                self setDStat("PlayerStatsList", stat_name, "StatValue", stat_value);
-                self setDStat("PlayerStatsList", stat_name, "ChallengeValue", stat_value);
+                // Add progress so existing accounts also receive a fresh unlock event.
+                self addPlayerStat(stat_name, stat_value);
+                self setDStat("PlayerStatsList", stat_name, "ChallengeValue", 50000);
             }
             else if (stat_type == "killstreak")
             {
@@ -1402,8 +1404,9 @@ um_unlockall(a, b)
 
                 foreach (token in tokens)
                 {
-                    self setDStat("PlayerStatsByGameType", token, stat_name, "StatValue", stat_value);
-                    self setDStat("PlayerStatsByGameType", token, stat_name, "ChallengeValue", stat_value);
+                    // Add progress for existing profiles, then force the challenge value high enough.
+                    self addgametypestat(stat_name, stat_value);
+                    self setDStat("PlayerStatsByGameType", token, stat_name, "ChallengeValue", 50000);
 
                     if (stat_name == "challenges")
                     {
@@ -1457,326 +1460,326 @@ um_unlockall(a, b)
         }
     }
 
-    self setDStat("PlayerStatsList", "reload_then_kill_dualclip", "StatValue", 823);
-    self setDStat("PlayerStatsList", "reload_then_kill_dualclip", "ChallengeValue", 823);
+    self addPlayerStat("reload_then_kill_dualclip", 823);
+    self setDStat("PlayerStatsList", "reload_then_kill_dualclip", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_remote_control_ai_tank", "StatValue", 628);
-    self setDStat("PlayerStatsList", "kill_with_remote_control_ai_tank", "ChallengeValue", 628);
+    self addPlayerStat("kill_with_remote_control_ai_tank", 628);
+    self setDStat("PlayerStatsList", "kill_with_remote_control_ai_tank", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killstreak_5_with_sentry_gun", "StatValue", 152);
-    self setDStat("PlayerStatsList", "killstreak_5_with_sentry_gun", "ChallengeValue", 152);
+    self addPlayerStat("killstreak_5_with_sentry_gun", 152);
+    self setDStat("PlayerStatsList", "killstreak_5_with_sentry_gun", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_remote_control_sentry_gun", "StatValue", 523);
-    self setDStat("PlayerStatsList", "kill_with_remote_control_sentry_gun", "ChallengeValue", 523);
+    self addPlayerStat("kill_with_remote_control_sentry_gun", 523);
+    self setDStat("PlayerStatsList", "kill_with_remote_control_sentry_gun", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killstreak_5_with_death_machine", "StatValue", 345);
-    self setDStat("PlayerStatsList", "killstreak_5_with_death_machine", "ChallengeValue", 345);
+    self addPlayerStat("killstreak_5_with_death_machine", 345);
+    self setDStat("PlayerStatsList", "killstreak_5_with_death_machine", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_locking_on_with_chopper_gunner", "StatValue", 52);
-    self setDStat("PlayerStatsList", "kill_enemy_locking_on_with_chopper_gunner", "ChallengeValue", 52);
+    self addPlayerStat("kill_enemy_locking_on_with_chopper_gunner", 52);
+    self setDStat("PlayerStatsList", "kill_enemy_locking_on_with_chopper_gunner", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_loadout_weapon_with_3_attachments", "StatValue", 523);
-    self setDStat("PlayerStatsList", "kill_with_loadout_weapon_with_3_attachments", "ChallengeValue", 523);
+    self addPlayerStat("kill_with_loadout_weapon_with_3_attachments", 523);
+    self setDStat("PlayerStatsList", "kill_with_loadout_weapon_with_3_attachments", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_both_primary_weapons", "StatValue", 652);
-    self setDStat("PlayerStatsList", "kill_with_both_primary_weapons", "ChallengeValue", 652);
+    self addPlayerStat("kill_with_both_primary_weapons", 652);
+    self setDStat("PlayerStatsList", "kill_with_both_primary_weapons", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_2_perks_same_category", "StatValue", 134);
-    self setDStat("PlayerStatsList", "kill_with_2_perks_same_category", "ChallengeValue", 134);
+    self addPlayerStat("kill_with_2_perks_same_category", 134);
+    self setDStat("PlayerStatsList", "kill_with_2_perks_same_category", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_while_uav_active", "StatValue", 824);
-    self setDStat("PlayerStatsList", "kill_while_uav_active", "ChallengeValue", 824);
+    self addPlayerStat("kill_while_uav_active", 824);
+    self setDStat("PlayerStatsList", "kill_while_uav_active", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_while_cuav_active", "StatValue", 878);
-    self setDStat("PlayerStatsList", "kill_while_cuav_active", "ChallengeValue", 878);
+    self addPlayerStat("kill_while_cuav_active", 878);
+    self setDStat("PlayerStatsList", "kill_while_cuav_active", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_while_satellite_active", "StatValue", 524);
-    self setDStat("PlayerStatsList", "kill_while_satellite_active", "ChallengeValue", 524);
+    self addPlayerStat("kill_while_satellite_active", 524);
+    self setDStat("PlayerStatsList", "kill_while_satellite_active", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_after_tac_insert", "StatValue", 239);
-    self setDStat("PlayerStatsList", "kill_after_tac_insert", "ChallengeValue", 239);
+    self addPlayerStat("kill_after_tac_insert", 239);
+    self setDStat("PlayerStatsList", "kill_after_tac_insert", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_revealed_by_sensor", "StatValue", 54);
-    self setDStat("PlayerStatsList", "kill_enemy_revealed_by_sensor", "ChallengeValue", 54);
+    self addPlayerStat("kill_enemy_revealed_by_sensor", 54);
+    self setDStat("PlayerStatsList", "kill_enemy_revealed_by_sensor", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_while_emp_active", "StatValue", 423);
-    self setDStat("PlayerStatsList", "kill_while_emp_active", "ChallengeValue", 423);
+    self addPlayerStat("kill_while_emp_active", 423);
+    self setDStat("PlayerStatsList", "kill_while_emp_active", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "survive_claymore_kill_planter_flak_jacket_equipped", "StatValue", 235);
-    self setDStat("PlayerStatsList", "survive_claymore_kill_planter_flak_jacket_equipped", "ChallengeValue", 235);
+    self addPlayerStat("survive_claymore_kill_planter_flak_jacket_equipped", 235);
+    self setDStat("PlayerStatsList", "survive_claymore_kill_planter_flak_jacket_equipped", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killstreak_5_dogs", "StatValue", 34);
-    self setDStat("PlayerStatsList", "killstreak_5_dogs", "ChallengeValue", 34);
+    self addPlayerStat("killstreak_5_dogs", 34);
+    self setDStat("PlayerStatsList", "killstreak_5_dogs", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_flashed_enemy", "StatValue", 453);
-    self setDStat("PlayerStatsList", "kill_flashed_enemy", "ChallengeValue", 453);
+    self addPlayerStat("kill_flashed_enemy", 453);
+    self setDStat("PlayerStatsList", "kill_flashed_enemy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_concussed_enemy", "StatValue", 343);
-    self setDStat("PlayerStatsList", "kill_concussed_enemy", "ChallengeValue", 343);
+    self addPlayerStat("kill_concussed_enemy", 343);
+    self setDStat("PlayerStatsList", "kill_concussed_enemy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_who_shocked_you", "StatValue", 232);
-    self setDStat("PlayerStatsList", "kill_enemy_who_shocked_you", "ChallengeValue", 232);
+    self addPlayerStat("kill_enemy_who_shocked_you", 232);
+    self setDStat("PlayerStatsList", "kill_enemy_who_shocked_you", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_shocked_enemy", "StatValue", 632);
-    self setDStat("PlayerStatsList", "kill_shocked_enemy", "ChallengeValue", 632);
+    self addPlayerStat("kill_shocked_enemy", 632);
+    self setDStat("PlayerStatsList", "kill_shocked_enemy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "shock_enemy_then_stab_them", "StatValue", 824);
-    self setDStat("PlayerStatsList", "shock_enemy_then_stab_them", "ChallengeValue", 824);
+    self addPlayerStat("shock_enemy_then_stab_them", 824);
+    self setDStat("PlayerStatsList", "shock_enemy_then_stab_them", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "mantle_then_kill", "StatValue", 874);
-    self setDStat("PlayerStatsList", "mantle_then_kill", "ChallengeValue", 874);
+    self addPlayerStat("mantle_then_kill", 874);
+    self setDStat("PlayerStatsList", "mantle_then_kill", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_with_picked_up_weapon", "StatValue", 822);
-    self setDStat("PlayerStatsList", "kill_enemy_with_picked_up_weapon", "ChallengeValue", 822);
+    self addPlayerStat("kill_enemy_with_picked_up_weapon", 822);
+    self setDStat("PlayerStatsList", "kill_enemy_with_picked_up_weapon", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killstreak_5_picked_up_weapon", "StatValue", 564);
-    self setDStat("PlayerStatsList", "killstreak_5_picked_up_weapon", "ChallengeValue", 564);
+    self addPlayerStat("killstreak_5_picked_up_weapon", 564);
+    self setDStat("PlayerStatsList", "killstreak_5_picked_up_weapon", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_shoot_their_explosive", "StatValue", 124);
-    self setDStat("PlayerStatsList", "kill_enemy_shoot_their_explosive", "ChallengeValue", 124);
+    self addPlayerStat("kill_enemy_shoot_their_explosive", 124);
+    self setDStat("PlayerStatsList", "kill_enemy_shoot_their_explosive", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_while_crouched", "StatValue", 1324);
-    self setDStat("PlayerStatsList", "kill_enemy_while_crouched", "ChallengeValue", 1324);
+    self addPlayerStat("kill_enemy_while_crouched", 1324);
+    self setDStat("PlayerStatsList", "kill_enemy_while_crouched", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_while_prone", "StatValue", 1182);
-    self setDStat("PlayerStatsList", "kill_enemy_while_prone", "ChallengeValue", 1182);
+    self addPlayerStat("kill_enemy_while_prone", 1182);
+    self setDStat("PlayerStatsList", "kill_enemy_while_prone", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_prone_enemy", "StatValue", 1122);
-    self setDStat("PlayerStatsList", "kill_prone_enemy", "ChallengeValue", 1122);
+    self addPlayerStat("kill_prone_enemy", 1122);
+    self setDStat("PlayerStatsList", "kill_prone_enemy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_every_enemy", "StatValue", 1213);
-    self setDStat("PlayerStatsList", "kill_every_enemy", "ChallengeValue", 1213);
+    self addPlayerStat("kill_every_enemy", 1213);
+    self setDStat("PlayerStatsList", "kill_every_enemy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "pistolHeadshot_10_onegame", "StatValue", 1123);
-    self setDStat("PlayerStatsList", "pistolHeadshot_10_onegame", "ChallengeValue", 1123);
+    self addPlayerStat("pistolHeadshot_10_onegame", 1123);
+    self setDStat("PlayerStatsList", "pistolHeadshot_10_onegame", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "headshot_assault_5_onegame", "StatValue", 143);
-    self setDStat("PlayerStatsList", "headshot_assault_5_onegame", "ChallengeValue", 143);
+    self addPlayerStat("headshot_assault_5_onegame", 143);
+    self setDStat("PlayerStatsList", "headshot_assault_5_onegame", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_sniper", "StatValue", 1754);
-    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_sniper", "ChallengeValue", 1754);
+    self addPlayerStat("kill_enemy_one_bullet_sniper", 1754);
+    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_sniper", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_sniper_onegame", "StatValue", 2341);
-    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_sniper_onegame", "ChallengeValue", 2341);
+    self addPlayerStat("kill_10_enemy_one_bullet_sniper_onegame", 2341);
+    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_sniper_onegame", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_shotgun", "StatValue", 415);
-    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_shotgun", "ChallengeValue", 415);
+    self addPlayerStat("kill_enemy_one_bullet_shotgun", 415);
+    self setDStat("PlayerStatsList", "kill_enemy_one_bullet_shotgun", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_shotgun_onegame", "StatValue", 321);
-    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_shotgun_onegame", "ChallengeValue", 321);
+    self addPlayerStat("kill_10_enemy_one_bullet_shotgun_onegame", 321);
+    self setDStat("PlayerStatsList", "kill_10_enemy_one_bullet_shotgun_onegame", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_with_tacknife", "StatValue", 961);
-    self setDStat("PlayerStatsList", "kill_enemy_with_tacknife", "ChallengeValue", 961);
+    self addPlayerStat("kill_enemy_with_tacknife", 961);
+    self setDStat("PlayerStatsList", "kill_enemy_with_tacknife", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "KILL_CROSSBOW_STACKFIRE", "StatValue", 241);
-    self setDStat("PlayerStatsList", "KILL_CROSSBOW_STACKFIRE", "ChallengeValue", 241);
+    self addPlayerStat("KILL_CROSSBOW_STACKFIRE", 241);
+    self setDStat("PlayerStatsList", "KILL_CROSSBOW_STACKFIRE", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "hatchet_kill_with_shield_equiped", "StatValue", 741);
-    self setDStat("PlayerStatsList", "hatchet_kill_with_shield_equiped", "ChallengeValue", 741);
+    self addPlayerStat("hatchet_kill_with_shield_equiped", 741);
+    self setDStat("PlayerStatsList", "hatchet_kill_with_shield_equiped", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_claymore", "StatValue", 361);
-    self setDStat("PlayerStatsList", "kill_with_claymore", "ChallengeValue", 361);
+    self addPlayerStat("kill_with_claymore", 361);
+    self setDStat("PlayerStatsList", "kill_with_claymore", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_hacked_claymore", "StatValue", 317);
-    self setDStat("PlayerStatsList", "kill_with_hacked_claymore", "ChallengeValue", 317);
+    self addPlayerStat("kill_with_hacked_claymore", 317);
+    self setDStat("PlayerStatsList", "kill_with_hacked_claymore", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_c4", "StatValue", 121);
-    self setDStat("PlayerStatsList", "kill_with_c4", "ChallengeValue", 121);
+    self addPlayerStat("kill_with_c4", 121);
+    self setDStat("PlayerStatsList", "kill_with_c4", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_withcar", "StatValue", 341);
-    self setDStat("PlayerStatsList", "kill_enemy_withcar", "ChallengeValue", 341);
+    self addPlayerStat("kill_enemy_withcar", 341);
+    self setDStat("PlayerStatsList", "kill_enemy_withcar", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "stick_explosive_kill_5_onegame", "StatValue", 121);
-    self setDStat("PlayerStatsList", "stick_explosive_kill_5_onegame", "ChallengeValue", 121);
+    self addPlayerStat("stick_explosive_kill_5_onegame", 121);
+    self setDStat("PlayerStatsList", "stick_explosive_kill_5_onegame", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_cooked_grenade", "StatValue", 123);
-    self setDStat("PlayerStatsList", "kill_with_cooked_grenade", "ChallengeValue", 123);
+    self addPlayerStat("kill_with_cooked_grenade", 123);
+    self setDStat("PlayerStatsList", "kill_with_cooked_grenade", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_tossed_back_lethal", "StatValue", 155);
-    self setDStat("PlayerStatsList", "kill_with_tossed_back_lethal", "ChallengeValue", 155);
+    self addPlayerStat("kill_with_tossed_back_lethal", 155);
+    self setDStat("PlayerStatsList", "kill_with_tossed_back_lethal", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_dual_lethal_grenades", "StatValue", 123);
-    self setDStat("PlayerStatsList", "kill_with_dual_lethal_grenades", "ChallengeValue", 123);
+    self addPlayerStat("kill_with_dual_lethal_grenades", 123);
+    self setDStat("PlayerStatsList", "kill_with_dual_lethal_grenades", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_movefaster_kills", "StatValue", 153);
-    self setDStat("PlayerStatsList", "perk_movefaster_kills", "ChallengeValue", 153);
+    self addPlayerStat("perk_movefaster_kills", 153);
+    self setDStat("PlayerStatsList", "perk_movefaster_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_noname_kills", "StatValue", 112);
-    self setDStat("PlayerStatsList", "perk_noname_kills", "ChallengeValue", 112);
+    self addPlayerStat("perk_noname_kills", 112);
+    self setDStat("PlayerStatsList", "perk_noname_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_quieter_kills", "StatValue", 1500);
-    self setDStat("PlayerStatsList", "perk_quieter_kills", "ChallengeValue", 1500);
+    self addPlayerStat("perk_quieter_kills", 1500);
+    self setDStat("PlayerStatsList", "perk_quieter_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_longersprint", "StatValue", 123);
-    self setDStat("PlayerStatsList", "perk_longersprint", "ChallengeValue", 123);
+    self addPlayerStat("perk_longersprint", 123);
+    self setDStat("PlayerStatsList", "perk_longersprint", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_fastmantle_kills", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_fastmantle_kills", "ChallengeValue", 2457);
+    self addPlayerStat("perk_fastmantle_kills", 2457);
+    self setDStat("PlayerStatsList", "perk_fastmantle_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_loudenemies_kills", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_loudenemies_kills", "ChallengeValue", 2457);
+    self addPlayerStat("perk_loudenemies_kills", 2457);
+    self setDStat("PlayerStatsList", "perk_loudenemies_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_protection_stun_kills", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_protection_stun_kills", "ChallengeValue", 2457);
+    self addPlayerStat("perk_protection_stun_kills", 2457);
+    self setDStat("PlayerStatsList", "perk_protection_stun_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_immune_cuav_kills", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_immune_cuav_kills", "ChallengeValue", 2457);
+    self addPlayerStat("perk_immune_cuav_kills", 2457);
+    self setDStat("PlayerStatsList", "perk_immune_cuav_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_gpsjammer_immune_kills", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_gpsjammer_immune_kills", "ChallengeValue", 2457);
+    self addPlayerStat("perk_gpsjammer_immune_kills", 2457);
+    self setDStat("PlayerStatsList", "perk_gpsjammer_immune_kills", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_fastweaponswitch_kill_after_swap", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_fastweaponswitch_kill_after_swap", "ChallengeValue", 2457);
+    self addPlayerStat("perk_fastweaponswitch_kill_after_swap", 2457);
+    self setDStat("PlayerStatsList", "perk_fastweaponswitch_kill_after_swap", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_scavenger_kills_after_resupply", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_scavenger_kills_after_resupply", "ChallengeValue", 2457);
+    self addPlayerStat("perk_scavenger_kills_after_resupply", 2457);
+    self setDStat("PlayerStatsList", "perk_scavenger_kills_after_resupply", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_flak_survive", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_flak_survive", "ChallengeValue", 2457);
+    self addPlayerStat("perk_flak_survive", 2457);
+    self setDStat("PlayerStatsList", "perk_flak_survive", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_earnmoremomentum_earn_streak", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_earnmoremomentum_earn_streak", "ChallengeValue", 2457);
+    self addPlayerStat("perk_earnmoremomentum_earn_streak", 2457);
+    self setDStat("PlayerStatsList", "perk_earnmoremomentum_earn_streak", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_through_wall", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_enemy_through_wall", "ChallengeValue", 2457);
+    self addPlayerStat("kill_enemy_through_wall", 2457);
+    self setDStat("PlayerStatsList", "kill_enemy_through_wall", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_enemy_through_wall_with_fmj", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_enemy_through_wall_with_fmj", "ChallengeValue", 2457);
+    self addPlayerStat("kill_enemy_through_wall_with_fmj", 2457);
+    self setDStat("PlayerStatsList", "kill_enemy_through_wall_with_fmj", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "disarm_hacked_carepackage", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "disarm_hacked_carepackage", "ChallengeValue", 2457);
+    self addPlayerStat("disarm_hacked_carepackage", 2457);
+    self setDStat("PlayerStatsList", "disarm_hacked_carepackage", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_car", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_car", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_car", 2457);
+    self setDStat("PlayerStatsList", "destroy_car", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_nemesis", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_nemesis", "ChallengeValue", 2457);
+    self addPlayerStat("kill_nemesis", 2457);
+    self setDStat("PlayerStatsList", "kill_nemesis", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_while_damaging_with_microwave_turret", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_while_damaging_with_microwave_turret", "ChallengeValue", 2457);
+    self addPlayerStat("kill_while_damaging_with_microwave_turret", 2457);
+    self setDStat("PlayerStatsList", "kill_while_damaging_with_microwave_turret", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "long_distance_hatchet_kill", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "long_distance_hatchet_kill", "ChallengeValue", 2457);
+    self addPlayerStat("long_distance_hatchet_kill", 2457);
+    self setDStat("PlayerStatsList", "long_distance_hatchet_kill", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "activate_cuav_while_enemy_satelite_active", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "activate_cuav_while_enemy_satelite_active", "ChallengeValue", 2457);
+    self addPlayerStat("activate_cuav_while_enemy_satelite_active", 2457);
+    self setDStat("PlayerStatsList", "activate_cuav_while_enemy_satelite_active", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "longshot_3_onelife", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "longshot_3_onelife", "ChallengeValue", 2457);
+    self addPlayerStat("longshot_3_onelife", 2457);
+    self setDStat("PlayerStatsList", "longshot_3_onelife", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "get_final_kill", "StatValue", 5057);
-    self setDStat("PlayerStatsList", "get_final_kill", "ChallengeValue", 5057);
+    self addPlayerStat("get_final_kill", 5057);
+    self setDStat("PlayerStatsList", "get_final_kill", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_rcbomb_with_hatchet", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_rcbomb_with_hatchet", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_rcbomb_with_hatchet", 2457);
+    self setDStat("PlayerStatsList", "destroy_rcbomb_with_hatchet", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "defend_teammate_who_captured_package", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "defend_teammate_who_captured_package", "ChallengeValue", 2457);
+    self addPlayerStat("defend_teammate_who_captured_package", 2457);
+    self setDStat("PlayerStatsList", "defend_teammate_who_captured_package", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_score_streak_with_qrdrone", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_score_streak_with_qrdrone", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_score_streak_with_qrdrone", 2457);
+    self setDStat("PlayerStatsList", "destroy_score_streak_with_qrdrone", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "capture_objective_in_smoke", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "capture_objective_in_smoke", "ChallengeValue", 2457);
+    self addPlayerStat("capture_objective_in_smoke", 2457);
+    self setDStat("PlayerStatsList", "capture_objective_in_smoke", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_hacker_destroy", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_hacker_destroy", "ChallengeValue", 2457);
+    self addPlayerStat("perk_hacker_destroy", 2457);
+    self setDStat("PlayerStatsList", "perk_hacker_destroy", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_equipment_with_emp_grenade", "StatValue", 1021);
-    self setDStat("PlayerStatsList", "destroy_equipment_with_emp_grenade", "ChallengeValue", 1021);
+    self addPlayerStat("destroy_equipment_with_emp_grenade", 1021);
+    self setDStat("PlayerStatsList", "destroy_equipment_with_emp_grenade", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_equipment", "StatValue", 2857);
-    self setDStat("PlayerStatsList", "destroy_equipment", "ChallengeValue", 2857);
+    self addPlayerStat("destroy_equipment", 2857);
+    self setDStat("PlayerStatsList", "destroy_equipment", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_5_tactical_inserts", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_5_tactical_inserts", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_5_tactical_inserts", 2457);
+    self setDStat("PlayerStatsList", "destroy_5_tactical_inserts", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_15_with_blade", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_15_with_blade", "ChallengeValue", 2457);
+    self addPlayerStat("kill_15_with_blade", 2457);
+    self setDStat("PlayerStatsList", "kill_15_with_blade", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_explosive", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_explosive", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_explosive", 2457);
+    self setDStat("PlayerStatsList", "destroy_explosive", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist", "StatValue", 20457);
-    self setDStat("PlayerStatsList", "assist", "ChallengeValue", 20457);
+    self addPlayerStat("assist", 20457);
+    self setDStat("PlayerStatsList", "assist", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_microwave_turret", "StatValue", 25500);
-    self setDStat("PlayerStatsList", "assist_score_microwave_turret", "ChallengeValue", 25500);
+    self addPlayerStat("assist_score_microwave_turret", 25500);
+    self setDStat("PlayerStatsList", "assist_score_microwave_turret", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_killstreak", "StatValue", 155050);
-    self setDStat("PlayerStatsList", "assist_score_killstreak", "ChallengeValue", 155050);
+    self addPlayerStat("assist_score_killstreak", 155050);
+    self setDStat("PlayerStatsList", "assist_score_killstreak", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_cuav", "StatValue", 137020);
-    self setDStat("PlayerStatsList", "assist_score_cuav", "ChallengeValue", 137020);
+    self addPlayerStat("assist_score_cuav", 137020);
+    self setDStat("PlayerStatsList", "assist_score_cuav", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_uav", "StatValue", 114020);
-    self setDStat("PlayerStatsList", "assist_score_uav", "ChallengeValue", 114020);
+    self addPlayerStat("assist_score_uav", 114020);
+    self setDStat("PlayerStatsList", "assist_score_uav", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_satellite", "StatValue", 100480);
-    self setDStat("PlayerStatsList", "assist_score_satellite", "ChallengeValue", 100480);
+    self addPlayerStat("assist_score_satellite", 100480);
+    self setDStat("PlayerStatsList", "assist_score_satellite", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "assist_score_emp", "StatValue", 39940);
-    self setDStat("PlayerStatsList", "assist_score_emp", "ChallengeValue", 39940);
+    self addPlayerStat("assist_score_emp", 39940);
+    self setDStat("PlayerStatsList", "assist_score_emp", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "multikill_3_near_death", "StatValue", 4924);
-    self setDStat("PlayerStatsList", "multikill_3_near_death", "ChallengeValue", 4924);
+    self addPlayerStat("multikill_3_near_death", 4924);
+    self setDStat("PlayerStatsList", "multikill_3_near_death", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "multikill_3_lmg_or_smg_hip_fire", "StatValue", 8774);
-    self setDStat("PlayerStatsList", "multikill_3_lmg_or_smg_hip_fire", "ChallengeValue", 8774);
+    self addPlayerStat("multikill_3_lmg_or_smg_hip_fire", 8774);
+    self setDStat("PlayerStatsList", "multikill_3_lmg_or_smg_hip_fire", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killed_dog_close_to_teammate", "StatValue", 3943);
-    self setDStat("PlayerStatsList", "killed_dog_close_to_teammate", "ChallengeValue", 3943);
+    self addPlayerStat("killed_dog_close_to_teammate", 3943);
+    self setDStat("PlayerStatsList", "killed_dog_close_to_teammate", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "multikill_2_zone_attackers", "StatValue", 2592);
-    self setDStat("PlayerStatsList", "multikill_2_zone_attackers", "ChallengeValue", 2592);
+    self addPlayerStat("multikill_2_zone_attackers", 2592);
+    self setDStat("PlayerStatsList", "multikill_2_zone_attackers", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "muiltikill_2_with_rcbomb", "StatValue", 1923);
-    self setDStat("PlayerStatsList", "muiltikill_2_with_rcbomb", "ChallengeValue", 1923);
+    self addPlayerStat("muiltikill_2_with_rcbomb", 1923);
+    self setDStat("PlayerStatsList", "muiltikill_2_with_rcbomb", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "multikill_3_remote_missile", "StatValue", 3282);
-    self setDStat("PlayerStatsList", "multikill_3_remote_missile", "ChallengeValue", 3282);
+    self addPlayerStat("multikill_3_remote_missile", 3282);
+    self setDStat("PlayerStatsList", "multikill_3_remote_missile", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "multikill_3_with_mgl", "StatValue", 2001);
-    self setDStat("PlayerStatsList", "multikill_3_with_mgl", "ChallengeValue", 2001);
+    self addPlayerStat("multikill_3_with_mgl", 2001);
+    self setDStat("PlayerStatsList", "multikill_3_with_mgl", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_turret", "StatValue", 3924);
-    self setDStat("PlayerStatsList", "destroy_turret", "ChallengeValue", 3924);
+    self addPlayerStat("destroy_turret", 3924);
+    self setDStat("PlayerStatsList", "destroy_turret", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "call_in_3_care_packages", "StatValue", 1934);
-    self setDStat("PlayerStatsList", "call_in_3_care_packages", "ChallengeValue", 1934);
+    self addPlayerStat("call_in_3_care_packages", 1934);
+    self setDStat("PlayerStatsList", "call_in_3_care_packages", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroyed_helicopter_with_bullet", "StatValue", 734);
-    self setDStat("PlayerStatsList", "destroyed_helicopter_with_bullet", "ChallengeValue", 734);
+    self addPlayerStat("destroyed_helicopter_with_bullet", 734);
+    self setDStat("PlayerStatsList", "destroyed_helicopter_with_bullet", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_qrdrone", "StatValue", 1695);
-    self setDStat("PlayerStatsList", "destroy_qrdrone", "ChallengeValue", 1695);
+    self addPlayerStat("destroy_qrdrone", 1695);
+    self setDStat("PlayerStatsList", "destroy_qrdrone", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroyed_qrdrone_with_bullet", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroyed_qrdrone_with_bullet", "ChallengeValue", 2457);
+    self addPlayerStat("destroyed_qrdrone_with_bullet", 2457);
+    self setDStat("PlayerStatsList", "destroyed_qrdrone_with_bullet", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_helicopter", "StatValue", 1993);
-    self setDStat("PlayerStatsList", "destroy_helicopter", "ChallengeValue", 1993);
+    self addPlayerStat("destroy_helicopter", 1993);
+    self setDStat("PlayerStatsList", "destroy_helicopter", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_aircraft_with_emp", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_aircraft_with_emp", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_aircraft_with_emp", 2457);
+    self setDStat("PlayerStatsList", "destroy_aircraft_with_emp", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_aircraft_with_missile_drone", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "destroy_aircraft_with_missile_drone", "ChallengeValue", 2457);
+    self addPlayerStat("destroy_aircraft_with_missile_drone", 2457);
+    self setDStat("PlayerStatsList", "destroy_aircraft_with_missile_drone", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "perk_nottargetedbyairsupport_destroy_aircraft", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "perk_nottargetedbyairsupport_destroy_aircraft", "ChallengeValue", 2457);
+    self addPlayerStat("perk_nottargetedbyairsupport_destroy_aircraft", 2457);
+    self setDStat("PlayerStatsList", "perk_nottargetedbyairsupport_destroy_aircraft", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "destroy_aircraft", "StatValue", 1993);
-    self setDStat("PlayerStatsList", "destroy_aircraft", "ChallengeValue", 1993);
+    self addPlayerStat("destroy_aircraft", 1993);
+    self setDStat("PlayerStatsList", "destroy_aircraft", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "killstreak_10_no_weapons_perks", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "killstreak_10_no_weapons_perks", "ChallengeValue", 2457);
+    self addPlayerStat("killstreak_10_no_weapons_perks", 2457);
+    self setDStat("PlayerStatsList", "killstreak_10_no_weapons_perks", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "kill_with_resupplied_lethal_grenade", "StatValue", 2457);
-    self setDStat("PlayerStatsList", "kill_with_resupplied_lethal_grenade", "ChallengeValue", 2457);
+    self addPlayerStat("kill_with_resupplied_lethal_grenade", 2457);
+    self setDStat("PlayerStatsList", "kill_with_resupplied_lethal_grenade", "ChallengeValue", 50000);
     wait 0.03;
-    self setDStat("PlayerStatsList", "stun_aitank_with_emp_grenade", "StatValue", 223);
-    self setDStat("PlayerStatsList", "stun_aitank_with_emp_grenade", "ChallengeValue", 223);
+    self addPlayerStat("stun_aitank_with_emp_grenade", 223);
+    self setDStat("PlayerStatsList", "stun_aitank_with_emp_grenade", "ChallengeValue", 50000);
     wait 0.03;
 
     self setDStat("itemStats", GetBaseWeaponItemIndex("supplydrop_mp"), "purchased", 1);
@@ -1784,6 +1787,45 @@ um_unlockall(a, b)
     self setDStat("itemStats", GetBaseWeaponItemIndex("microwave_turret_mp"), "purchased", 1);
     self setDStat("itemStats", GetBaseWeaponItemIndex("radardirection_mp"), "purchased", 1);
     self setDStat("itemStats", GetBaseWeaponItemIndex("emp_mp"), "purchased", 1);
+    // ================================================================
+    // SCORESTREAK CALLING CARDS - ALL 4 TIERS
+    // Force the kill counters high enough to complete all four tiers,
+    // including tiers missing on accounts that already had progress.
+    streak_card_weapons = [];
+    streak_card_weapons[streak_card_weapons.size] = "rcbomb_mp";                    // RC-XD
+    streak_card_weapons[streak_card_weapons.size] = "missile_drone_mp";              // Hunter Killer
+    streak_card_weapons[streak_card_weapons.size] = "remote_missile_mp";             // Hellstorm Missile
+    streak_card_weapons[streak_card_weapons.size] = "helicopter_comlink_mp";         // Stealth Chopper
+    streak_card_weapons[streak_card_weapons.size] = "remote_mortar_mp";              // Lodestar
+    streak_card_weapons[streak_card_weapons.size] = "straferun_mp";                  // Warthog
+    streak_card_weapons[streak_card_weapons.size] = "helicopter_guard_mp";            // Escort Drone
+    streak_card_weapons[streak_card_weapons.size] = "helicopter_player_gunner_mp";    // VTOL Warship
+    streak_card_weapons[streak_card_weapons.size] = "missile_swarm_mp";              // Swarm
+    streak_card_weapons[streak_card_weapons.size] = "m32_mp";                        // War Machine
+    streak_card_weapons[streak_card_weapons.size] = "minigun_mp";                    // Death Machine
+    streak_card_weapons[streak_card_weapons.size] = "autoturret_mp";                 // Sentry Gun
+    streak_card_weapons[streak_card_weapons.size] = "ai_tank_drop_mp";               // A.G.R.
+    streak_card_weapons[streak_card_weapons.size] = "dogs_mp";                       // K9 Unit
+
+    for (streak_index = 0; streak_index < streak_card_weapons.size; streak_index++)
+    {
+        streak_weapon = streak_card_weapons[streak_index];
+        self addWeaponStat(streak_weapon, "kills", 667667);
+        wait 0.05;
+        self setDStat("itemStats", GetBaseWeaponItemIndex(streak_weapon), "purchased", 1);
+        wait 0.05;
+    }
+
+    // Alternate internal entries used by BO2 for some scorestreaks.
+    self addWeaponStat("inventory_missile_drone_mp", "kills", 667667); // Hunter Killer
+    wait 0.05;
+    self addWeaponStat("inventory_minigun_mp", "kills", 667667);       // Death Machine
+    wait 0.05;
+    self addWeaponStat("inventory_m32_mp", "kills", 667667);           // War Machine
+    wait 0.05;
+    self addWeaponStat("inventory_ai_tank_drop_mp", "kills", 667667);  // A.G.R.
+    wait 0.05;
+
 
     self notify("um_unlockall_done");
     wait 0.05;
