@@ -17,6 +17,12 @@ This is **version 3** of UnlockMenu.
 
 Choose the correct file according to the tool you are using.
 
+## Supported Firmware
+
+|            PS4           |         PS5           |
+|--------------------------|-----------------------|
+| **9.00-13.52**           | **???**               |
+
 ---
 
 ## Features
