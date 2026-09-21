@@ -1,10 +1,10 @@
-# UnlockMenuV3 – Free Open Source BO2 PS4 GSC Menu
+# UnlockMenuV3.5 – Free Open Source BO2 PS4 GSC Menu
 
-**VERSION 3.1 IS OUT**
+**VERSION 3.5 IS OUT**
 
 **A free and open-source GSC menu for Call of Duty: Black Ops 2 on PlayStation 4**, focused on account recovery, stat editing, and full unlocks.
 
-This is **version 3** of UnlockMenu.
+This is **version 3.5** of UnlockMenu.
 
 ---
 
