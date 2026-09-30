@@ -1,12 +1,12 @@
-# UnlockMenuV3.5 – Free Open Source BO2 PS4 GSC Menu
+# UnlockMenuV4 – Free Open Source BO2 PS4 GSC Menu
 
 [Zombies Version](https://github.com/a5x/BO2-Zombies-Mod-Menu-PS4)
 
-**VERSION 3.5 IS OUT**
+**VERSION 4 IS OUT**
 
 **A free and open-source GSC menu for Call of Duty: Black Ops 2 on PlayStation 4**, focused on account recovery, stat editing, and full unlocks.
 
-This is **version 3.5** of UnlockMenu.
+This is **version 4** of UnlockMenu.
 
 ---
 
@@ -23,7 +23,7 @@ Choose the correct file according to the tool you are using.
 
 |            PS4           |         PS5           |
 |--------------------------|-----------------------|
-| **9.00-13.52**           | **???**               |
+| **9.00-13.52**           | **?-13.60**               |
 
 ---
 
