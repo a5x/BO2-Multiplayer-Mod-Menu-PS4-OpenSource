@@ -31,6 +31,7 @@ Choose the correct file according to the tool you are using.
 
 ### Rank Up
 - Rank up options
+  - Instant level 55
 
 ### Account Stats
 - Modify Account Stats  
@@ -44,6 +45,7 @@ Choose the correct file according to the tool you are using.
 - Unlock Camos  
 - Unlock All (works perfectly on fresh accounts or after a fresh start)  
 - Unlock **100% PSN Trophies**
+- Unlock a Specific Trophy
 
 ### Save / Profiles
 - Save Account Stats
